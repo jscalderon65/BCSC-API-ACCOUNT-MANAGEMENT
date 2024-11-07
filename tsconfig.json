@@ -16,6 +16,29 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@interceptors/*": [
+        "src/common/interceptors/*"
+      ],
+      "@constants/*": [
+        "src/common/constants/*"
+      ],
+      "@pipes/*": [
+        "src/common/pipes/*"
+      ],
+      "@db/*": [
+        "src/common/db/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ],
+      "@axios/*": [
+        "src/axios/*"
+      ],
+      "@swagger-docs/*": [
+        "src/swagger-docs/*"
+      ],
+    }
   }
 }
