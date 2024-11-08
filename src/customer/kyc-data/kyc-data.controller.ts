@@ -7,7 +7,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ParseObjectIdPipe } from '@pipes/parse-object-id.pipe';
 import {
   createSwaggerOptions,
@@ -21,7 +21,9 @@ import { CreateKycDataDto } from './dto/create-kyc-data.dto';
 import { UpdateKycDataDto } from './dto/update-kyc-data.dto';
 import { KycDataService } from './kyc-data.service';
 
-@Controller('kyc-data')
+const controllerPrefix = 'customer/kyc-data';
+@Controller(controllerPrefix)
+@ApiTags(controllerPrefix)
 export class KycDataController {
   constructor(private readonly kycDataService: KycDataService) {}
 

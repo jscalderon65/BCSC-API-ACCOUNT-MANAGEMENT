@@ -33,7 +33,7 @@ export class KycData {
   city_id: string | CityDocument;
 
   @Prop({ type: Types.ObjectId, ref: STATE_SCHEMA_NAME, required: true })
-  state_id: Types.ObjectId | StateDocument;
+  state_id: string | StateDocument;
 
   @Prop({ type: String, required: true })
   address: string;

@@ -1,3 +1,4 @@
+import { MESSAGES } from '@constants/messages';
 import {
   CITY_SCHEMA_NAME,
   KYC_DATA_SCHEMA_NAME,
@@ -5,6 +6,11 @@ import {
   PORTAL_PROFILE_SCHEMA_NAME,
   STATE_SCHEMA_NAME,
 } from '@constants/mongo-db';
+import {
+  protectedFieldUpdate,
+  validateEntityRelationships,
+} from '@helpers/validations.helper';
+import { DeleteResponse } from '@interfaces/common.interfaces';
 import { EntityRelationship } from '@interfaces/entity-relationship-validation.interface';
 import { CreateKycDataDto } from '@kyc-data/dto/create-kyc-data.dto';
 import { UpdateKycDataDto } from '@kyc-data/dto/update-kyc-data.dto';
@@ -49,39 +55,16 @@ export class KycDataService {
   async isValidEntityRelationshipsId(
     entityIds: EntityRelationship[],
   ): Promise<void> {
-    const errors: string[] = [];
     const entityServiceValidations = {
       [CITY_SCHEMA_NAME]: this.cityModel,
       [STATE_SCHEMA_NAME]: this.stateModel,
       [OCCUPATION_TYPE_SCHEMA_NAME]: this.occupationTypeModel,
       [PORTAL_PROFILE_SCHEMA_NAME]: this.portalProfileModel,
     };
-
-    for (const relation of entityIds) {
-      const entityName = relation.entityName;
-      const relationId = relation.id;
-      const model = entityServiceValidations[entityName];
-
-      if (!model) {
-        errors.push(`No se encontró el modelo para la entidad: ${entityName}`);
-        continue;
-      }
-
-      const result = await model.findById(relationId).exec();
-
-      if (!result) {
-        errors.push(
-          `No se encontró un elemento para la entidad: ${entityName} con el id: ${relationId}`,
-        );
-      }
-    }
-
-    if (errors.length > 0) {
-      throw new NotFoundException(JSON.stringify(errors));
-    }
+    await validateEntityRelationships(entityIds, entityServiceValidations);
   }
 
-  async create(createKycDataDto: CreateKycDataDto) {
+  async create(createKycDataDto: CreateKycDataDto): Promise<KycData> {
     const entityIds: EntityRelationship[] = [
       {
         entityName: CITY_SCHEMA_NAME,
@@ -110,25 +93,30 @@ export class KycDataService {
     return this.kycDataModel.find().populate(this.globalPopulatePath);
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<KycData> {
     const retrievedKycData = await this.kycDataModel
       .findById(id)
       .populate(this.globalPopulatePath);
     if (!retrievedKycData) {
-      throw new NotFoundException(
-        'No se encontró el registro de información detallada con el ID proporcionado',
-      );
+      throw new NotFoundException(MESSAGES.RESPONSE_MESSAGES.NO_RECORD_FOUND);
     }
     return retrievedKycData;
   }
 
-  async update(id: string, updateClientDto: UpdateKycDataDto) {
+  async update(
+    id: string,
+    updateClientDto: UpdateKycDataDto,
+  ): Promise<KycData> {
     const currentData = await this.kycDataModel.findById(id);
-    if (!currentData) {
-      throw new NotFoundException(
-        `No se encontró el registro de información detallada con el ID ${id}`,
-      );
-    }
+
+    const protectedField = ['customer_id'];
+
+    const safeUpdateData = await protectedFieldUpdate(
+      id,
+      currentData,
+      updateClientDto,
+      protectedField,
+    );
 
     const entityIds: EntityRelationship[] = [
       {
@@ -147,24 +135,6 @@ export class KycDataService {
 
     await this.isValidEntityRelationshipsId(entityIds);
 
-    const protectedField = 'customer_id';
-
-    if (
-      updateClientDto[protectedField] !== undefined &&
-      updateClientDto[protectedField] !== currentData[protectedField]
-    ) {
-      throw new BadRequestException(
-        `El campo ${protectedField} no se puede modificar`,
-      );
-    }
-
-    const safeUpdateData = Object.keys(updateClientDto)
-      .filter((key) => key !== protectedField)
-      .reduce((obj, key) => {
-        obj[key] = updateClientDto[key];
-        return obj;
-      }, {});
-
     const updatedKycData = await this.kycDataModel
       .findOneAndUpdate({ _id: id }, safeUpdateData, { new: true })
       .populate(this.globalPopulatePath);
@@ -172,18 +142,32 @@ export class KycDataService {
     return updatedKycData;
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<DeleteResponse<KycData>> {
+    const kycData = await this.kycDataModel.findById(id).exec();
+    if (!kycData) {
+      throw new NotFoundException(MESSAGES.RESPONSE_MESSAGES.NO_RECORD_FOUND);
+    }
+
+    const associatedCustomer = await this.portalProfileModel
+      .findById(kycData.customer_id)
+      .exec();
+
+    if (associatedCustomer) {
+      throw new BadRequestException(
+        MESSAGES.RESPONSE_MESSAGES.CANNOT_DELETE_RECORD('customer'),
+      );
+    }
+
     const deletedKycData = await this.kycDataModel
       .findByIdAndDelete(id)
       .populate(this.globalPopulatePath);
-    if (!deletedKycData) {
-      throw new NotFoundException(
-        'No se encontró el registro de información detallada con el ID proporcionado',
-      );
-    }
+
     return {
-      message: `Información detallada con ID ${id} eliminado exitosamente`,
-      profile: deletedKycData,
+      message: MESSAGES.RESPONSE_MESSAGES.DELETE_RESPONSE(
+        KYC_DATA_SCHEMA_NAME,
+        id,
+      ),
+      deletedItem: deletedKycData,
     };
   }
 }

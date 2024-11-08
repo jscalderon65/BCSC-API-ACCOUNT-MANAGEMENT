@@ -5,8 +5,8 @@ import { IsNumber, IsPositive, IsString } from 'class-validator';
 export class CreateFinancialDataDto {
   @ApiProperty({
     description: 'ID del perfil del cliente',
-    /* example: faker.database.mongodbObjectId(), */
-    example: '672d89fbc08fede246f7440f',
+    example: faker.database.mongodbObjectId(),
+    /* example: '672d89fbc08fede246f7440f', */
   })
   @IsString()
   customer_id: string;
