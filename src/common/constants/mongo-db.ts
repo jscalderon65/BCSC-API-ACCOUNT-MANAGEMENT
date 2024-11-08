@@ -14,3 +14,4 @@ export const OCCUPATION_TYPE_SCHEMA_NAME = 'occupation-type';
 export const PORTAL_PROFILE_SCHEMA_NAME = 'portal-profile';
 export const FINANCIAL_PROFILE_SCHEMA_NAME = 'financial-profile';
 export const KYC_DATA_SCHEMA_NAME = 'kyc-data';
+export const FINANCIAL_DATA_SCHEMA_NAME = 'financial-data';

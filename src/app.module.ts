@@ -8,7 +8,7 @@ import { AllExceptionsFilter } from 'src/common/interceptors/global-exception.in
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-/* import { FinancialDataModule } from './customer/financial-data/financial-data.module'; */
+import { FinancialDataModule } from './customer/financial-data/financial-data.module';
 import { KycDataModule } from './customer/kyc-data/kyc-data.module';
 import { PortalProfileModule } from './customer/portal-profile/portal-profile.module';
 
@@ -19,9 +19,9 @@ import { PortalProfileModule } from './customer/portal-profile/portal-profile.mo
     }),
     UtilsModule,
     AxiosModule,
-    /*     FinancialDataModule, */
     PortalProfileModule,
     KycDataModule,
+    FinancialDataModule,
   ],
   controllers: [AppController],
   providers: [
