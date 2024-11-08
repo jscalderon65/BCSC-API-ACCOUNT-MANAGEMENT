@@ -22,6 +22,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { TransactionStatus } from '@outgoing-transaction/dto/create-outgoing-transaction.dto';
 import { PortalProfileDocument } from '@portal-profile/entities/portal-profile.entity';
 import { Model } from 'mongoose';
 
@@ -55,10 +56,13 @@ export class FinancialDataService {
       },
     ];
 
+    const intitialStatus = TransactionStatus.Pending;
+
     await this.isValidEntityRelationshipsId(entityIds);
-    const newFinancialData = await this.financialDataModel.create(
-      createFinancialDatumDto,
-    );
+    const newFinancialData = await this.financialDataModel.create({
+      ...createFinancialDatumDto,
+      status: intitialStatus,
+    });
     return newFinancialData;
   }
 

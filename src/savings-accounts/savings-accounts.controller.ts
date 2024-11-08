@@ -8,7 +8,7 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ParseObjectIdPipe } from '@pipes/parse-object-id.pipe';
 import { CreateSavingsAccountDto } from '@savings-accounts/dto/create-savings-account.dto';
 import { UpdateSavingsAccountDto } from '@savings-accounts/dto/update-savings-account.dto';
@@ -22,7 +22,10 @@ import {
 } from '@swagger-docs/savings-accounts';
 import { Request } from 'express';
 
-@Controller('savings-accounts')
+const controllerPrefix = 'savings-accounts';
+
+@Controller(controllerPrefix)
+@ApiTags(controllerPrefix)
 export class SavingsAccountsController {
   constructor(
     private readonly savingsAccountsService: SavingsAccountsService,
