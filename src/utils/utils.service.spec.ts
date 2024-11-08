@@ -1,6 +1,7 @@
 import {
   CITY_SCHEMA_NAME,
   DOCUMENT_TYPE_SCHEMA_NAME,
+  OCCUPATION_TYPE_SCHEMA_NAME,
   STATE_SCHEMA_NAME,
 } from '@constants/mongo-db';
 import { getModelToken } from '@nestjs/mongoose';
@@ -31,6 +32,10 @@ describe('UtilsService', () => {
     find: jest.fn(),
   };
 
+  const mockOccupationTypeModel = {
+    find: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -46,6 +51,10 @@ describe('UtilsService', () => {
         {
           provide: getModelToken(DOCUMENT_TYPE_SCHEMA_NAME),
           useValue: mockDocumentTypeModel,
+        },
+        {
+          provide: getModelToken(OCCUPATION_TYPE_SCHEMA_NAME),
+          useValue: mockOccupationTypeModel,
         },
       ],
     }).compile();
