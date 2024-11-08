@@ -1,9 +1,10 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { IsEnum } from 'class-validator';
+
 import {
   CreateOutgoingTransactionDto,
   TransactionStatus,
 } from './create-outgoing-transaction.dto';
-import { IsEnum } from 'class-validator';
 
 export class UpdateOutgoingTransactionDto extends PartialType(
   CreateOutgoingTransactionDto,

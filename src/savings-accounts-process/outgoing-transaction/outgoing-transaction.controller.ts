@@ -1,15 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
-import { OutgoingTransactionService } from './outgoing-transaction.service';
-import { CreateOutgoingTransactionDto } from './dto/create-outgoing-transaction.dto';
-import { UpdateOutgoingTransactionDto } from './dto/update-outgoing-transaction.dto';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateOutgoingTransactionDto } from '@outgoing-transaction/dto/create-outgoing-transaction.dto';
+import { UpdateOutgoingTransactionDto } from '@outgoing-transaction/dto/update-outgoing-transaction.dto';
+import { OutgoingTransactionService } from '@outgoing-transaction/outgoing-transaction.service';
+import { ParseObjectIdPipe } from '@pipes/parse-object-id.pipe';
 import {
   createSwaggerOptions,
   findAllSwaggerOptions,
   findOneSwaggerOptions,
   updateSwaggerOptions,
 } from '@swagger-docs/outgoint-transaction';
-import { ParseObjectIdPipe } from '@pipes/parse-object-id.pipe';
 
 const controllerPrefix = 'savings-accounts-process/outgoing-transaction';
 

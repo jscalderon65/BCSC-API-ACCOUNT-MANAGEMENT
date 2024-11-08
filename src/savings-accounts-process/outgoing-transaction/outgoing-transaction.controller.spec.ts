@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+
 import { OutgoingTransactionController } from './outgoing-transaction.controller';
 import { OutgoingTransactionService } from './outgoing-transaction.service';
 
@@ -11,7 +12,9 @@ describe('OutgoingTransactionController', () => {
       providers: [OutgoingTransactionService],
     }).compile();
 
-    controller = module.get<OutgoingTransactionController>(OutgoingTransactionController);
+    controller = module.get<OutgoingTransactionController>(
+      OutgoingTransactionController,
+    );
   });
 
   it('should be defined', () => {

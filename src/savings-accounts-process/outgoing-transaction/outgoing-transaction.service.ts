@@ -1,27 +1,30 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { CreateOutgoingTransactionDto } from './dto/create-outgoing-transaction.dto';
-import { UpdateOutgoingTransactionDto } from './dto/update-outgoing-transaction.dto';
+import { MESSAGES } from '@constants/messages';
 import {
   OUTGOING_TRANSACTION_SCHEMA_NAME,
   SAVINGS_ACCOUNT_SCHEMA_NAME,
 } from '@constants/mongo-db';
 import {
-  OutgoingTransaction,
-  OutgoingTransactionDocument,
-} from './entities/outgoing-transaction.entity';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-import { SavingsAccountDocument } from '@savings-accounts/entities/savings-account.entity';
-import { EntityRelationship } from '@interfaces/entity-relationship-validation.interface';
-import {
   protectedFieldUpdate,
   validateEntityRelationships,
 } from '@helpers/validations.helper';
-import { MESSAGES } from '@constants/messages';
+import { EntityRelationship } from '@interfaces/entity-relationship-validation.interface';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import {
+  CreateOutgoingTransactionDto,
+  TransactionStatus,
+} from '@outgoing-transaction/dto/create-outgoing-transaction.dto';
+import { UpdateOutgoingTransactionDto } from '@outgoing-transaction/dto/update-outgoing-transaction.dto';
+import {
+  OutgoingTransaction,
+  OutgoingTransactionDocument,
+} from '@outgoing-transaction/entities/outgoing-transaction.entity';
+import { SavingsAccountDocument } from '@savings-accounts/entities/savings-account.entity';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class OutgoingTransactionService {
@@ -50,6 +53,13 @@ export class OutgoingTransactionService {
   async create(
     createOutgoingTransactionDto: CreateOutgoingTransactionDto,
   ): Promise<OutgoingTransaction> {
+    const minimumTransactionValue = 5000;
+    if (createOutgoingTransactionDto.value <= minimumTransactionValue) {
+      throw new BadRequestException(
+        `El valor de la transacción debe ser mayor a: ${minimumTransactionValue}`,
+      );
+    }
+
     if (
       createOutgoingTransactionDto.source_account_id ===
       createOutgoingTransactionDto.destination_account_id
@@ -71,10 +81,36 @@ export class OutgoingTransactionService {
     ];
 
     await this.isValidEntityRelationshipsId(entityIds);
-    const newOutgoingTransaction = await this.outgoingTransactionModel.create(
-      createOutgoingTransactionDto,
+
+    const sourceAccountData = await this.savingAccountModel
+      .findById(createOutgoingTransactionDto.source_account_id)
+      .exec();
+
+    const balanceTransactionValidation =
+      sourceAccountData.balance - createOutgoingTransactionDto.value;
+
+    if (balanceTransactionValidation < 0) {
+      throw new BadRequestException(
+        'El monto de la transacción supera el saldo de la cuenta de origen',
+      );
+    }
+
+    const newOutgoingTransaction = await this.outgoingTransactionModel.create({
+      ...createOutgoingTransactionDto,
+      status: TransactionStatus.Pending,
+    });
+
+    await this.savingAccountModel.findByIdAndUpdate(
+      createOutgoingTransactionDto.source_account_id,
+      {
+        balance: balanceTransactionValidation,
+        updated_at: new Date(),
+      },
     );
-    return newOutgoingTransaction;
+
+    return await this.outgoingTransactionModel
+      .findById(newOutgoingTransaction._id)
+      .populate(this.globalPopulatePath);
   }
 
   findAll(): Promise<OutgoingTransaction[]> {

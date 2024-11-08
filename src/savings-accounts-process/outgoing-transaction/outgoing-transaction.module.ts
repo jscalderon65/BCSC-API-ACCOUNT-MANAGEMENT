@@ -1,13 +1,13 @@
-import { Module } from '@nestjs/common';
-import { OutgoingTransactionService } from './outgoing-transaction.service';
-import { OutgoingTransactionController } from './outgoing-transaction.controller';
 import {
   OUTGOING_TRANSACTION_SCHEMA_NAME,
   SAVINGS_ACCOUNT_SCHEMA_NAME,
 } from '@constants/mongo-db';
-import { OutgoingTransactionSchema } from './entities/outgoing-transaction.entity';
-import { SavingsAccountSchema } from '@savings-accounts/entities/savings-account.entity';
+import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { OutgoingTransactionSchema } from '@outgoing-transaction/entities/outgoing-transaction.entity';
+import { OutgoingTransactionController } from '@outgoing-transaction/outgoing-transaction.controller';
+import { OutgoingTransactionService } from '@outgoing-transaction/outgoing-transaction.service';
+import { SavingsAccountSchema } from '@savings-accounts/entities/savings-account.entity';
 
 @Module({
   imports: [
