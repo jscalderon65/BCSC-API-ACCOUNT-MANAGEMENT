@@ -3,9 +3,9 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   findAllCitiesSwaggerOptions,
   findAllDocumentTypesSwaggerOptions,
+  findAllOccupationTypesSwaggerOptions,
   findAllStatesSwaggerOptions,
 } from '@swagger-docs/utils-services';
-
 import { UtilsService } from '@utils/utils.service';
 import { Request } from 'express';
 @Controller('utils')
@@ -29,5 +29,11 @@ export class UtilsController {
   @ApiResponse(findAllDocumentTypesSwaggerOptions)
   findAllDocumentTypes(@Req() request: Request) {
     return this.utilsService.findAllDocumentTypes(request);
+  }
+
+  @Get('occupation-types')
+  @ApiResponse(findAllOccupationTypesSwaggerOptions)
+  findAllOccupationTypes(@Req() request: Request) {
+    return this.utilsService.findAllOccupationTypes(request);
   }
 }

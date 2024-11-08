@@ -35,22 +35,6 @@ async function insertData() {
         updatedAt: '2023-12-21T17:04:25.715Z',
         __v: 0,
       },
-      {
-        _id: '658470199401dd011fab609d',
-        code: 'CE',
-        name: 'CE - Cédula de extranjería',
-        createdAt: '2023-12-21T17:04:25.715Z',
-        updatedAt: '2023-12-21T17:04:25.715Z',
-        __v: 0,
-      },
-      {
-        _id: '658470199401dd011fab609e',
-        code: 'CD',
-        name: 'CD - Carnet diplomático',
-        createdAt: '2023-12-21T17:04:25.715Z',
-        updatedAt: '2023-12-21T17:04:25.715Z',
-        __v: 0,
-      },
     ];
 
     await DocumentTypeModel.insertMany(DocumentTypesToInsert);

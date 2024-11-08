@@ -1,25 +1,25 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import * as request from 'supertest';
-import { Model } from 'mongoose';
-import { DocumentTypeDocument } from '@utils/schemas/user-identity/document-type.schema';
-import { CityDocument } from '@utils/schemas/location/city.schema';
-import { StateDocument } from '@utils/schemas/location/state.schema';
 import {
-  rootMongooseTestModule,
+  CITY_SCHEMA_NAME,
+  DOCUMENT_TYPE_SCHEMA_NAME,
+  STATE_SCHEMA_NAME,
+} from '@constants/mongo-db';
+import {
   closeInMongodConnection,
+  rootMongooseTestModule,
 } from '@db/stubs/mongo-db-in-memory';
-import { getModelToken } from '@nestjs/mongoose';
-import { UtilsModule } from '@utils/utils.module';
 import {
   CreateCityStub,
   CreateDocumentTypeStub,
   CreateStateStub,
 } from '@db/stubs/utils.stub';
-import {
-  STATE_SCHEMA_NAME,
-  CITY_SCHEMA_NAME,
-  DOCUMENT_TYPE_SCHEMA_NAME,
-} from '@constants/mongo-db';
+import { getModelToken } from '@nestjs/mongoose';
+import { Test, TestingModule } from '@nestjs/testing';
+import { CityDocument } from '@utils/schemas/location/city.schema';
+import { StateDocument } from '@utils/schemas/location/state.schema';
+import { DocumentTypeDocument } from '@utils/schemas/user-identity/document-type.schema';
+import { UtilsModule } from '@utils/utils.module';
+import { Model } from 'mongoose';
+import * as request from 'supertest';
 
 let app;
 let cityModel: Model<CityDocument>;

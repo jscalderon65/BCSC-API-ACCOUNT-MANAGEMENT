@@ -33,11 +33,26 @@
       "@utils/*": [
         "src/utils/*"
       ],
+      "@portal-profile/*": [
+        "src/customer/portal-profile/*"
+      ],
+      "@financial-data/*": [
+        "src/customer/financial-data/*"
+      ],
+      "@kyc-data/*": [
+        "src/customer/kyc-data/*"
+      ],
       "@axios/*": [
         "src/axios/*"
       ],
       "@swagger-docs/*": [
         "src/swagger-docs/*"
+      ],
+      "@helpers/*": [
+        "src/common/helpers/*"
+      ],
+      "@interfaces/*": [
+        "src/common/interfaces/*"
       ],
     }
   }

@@ -21,7 +21,8 @@
     "seed:state": "node dist/common/db/seeders/state.seed.js",
     "seed:city": "node dist/common/db/seeders/city.seed.js",
     "seed:docType": "node dist/common/db/seeders/documentType.seed.js",
-    "seed:all": "npm run seed:state && npm run seed:city && npm run seed:docType",
+    "seed:occType": "node dist/common/db/seeders/occupationType.seed.js",
+    "seed:all": "npm run seed:state && npm run seed:city && npm run seed:docType && npm run seed:occType",
     "commit": "cz"
   },
   "dependencies": {
@@ -90,8 +91,13 @@
       "^@pipes/(.*)$": "<rootDir>/common/pipes/$1",
       "^@db/(.*)$": "<rootDir>/common/db/$1",
       "^@utils/(.*)$": "<rootDir>/utils/$1",
+      "^@portal-profile/(.*)$": "<rootDir>/customer/portal-profile/$1",
+      "^@financial-data/(.*)$": "<rootDir>/customer/financial-data/$1",
+      "^@kyc-data/(.*)$": "<rootDir>/customer/kyc-data/$1",
       "^@axios/(.*)$": "<rootDir>/axios/$1",
-      "^@swagger-docs/(.*)$": "<rootDir>/swagger-docs/$1"
+      "^@helpers/(.*)$": "<rootDir>/common/helpers/$1",
+      "^@swagger-docs/(.*)$": "<rootDir>/swagger-docs/$1",
+      "^@interfaces/(.*)$": "<rootDir>/common/interfaces/$1"
     }
   },
   "config": {

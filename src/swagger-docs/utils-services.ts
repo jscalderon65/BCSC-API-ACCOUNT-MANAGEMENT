@@ -51,3 +51,19 @@ export const findAllDocumentTypesSwaggerOptions = {
     },
   },
 };
+
+export const findAllOccupationTypesSwaggerOptions = {
+  status: 200,
+  description:
+    'Endpoint que devuelve los distintos tipos de ocupaciones de un cliente de la plataforma transaccional.',
+  schema: {
+    type: 'object',
+    properties: {
+      _id: { type: 'string' },
+      name: { type: 'string' },
+      createdAt: { type: 'string' },
+      updatedAt: { type: 'string' },
+      __v: { type: 'number' },
+    },
+  },
+};
