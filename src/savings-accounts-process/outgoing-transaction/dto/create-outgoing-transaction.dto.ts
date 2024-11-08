@@ -33,6 +33,14 @@ export class CreateOutgoingTransactionDto {
   value: number;
 
   @ApiProperty({
+    description: 'Estatus de la operación',
+    /* example: faker.database.mongodbObjectId(), */
+    example: '672e9377cc0d95c6258bee97',
+  })
+  @IsString()
+  status_id: string;
+
+  @ApiProperty({
     description: 'Descripción de la operación',
     example: faker.lorem.sentence(),
   })

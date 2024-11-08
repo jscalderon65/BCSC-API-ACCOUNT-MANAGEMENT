@@ -22,7 +22,8 @@
     "seed:city": "node dist/common/db/seeders/city.seed.js",
     "seed:docType": "node dist/common/db/seeders/documentType.seed.js",
     "seed:occType": "node dist/common/db/seeders/occupationType.seed.js",
-    "seed:all": "npm run seed:state && npm run seed:city && npm run seed:docType && npm run seed:occType",
+    "seed:statusType": "node dist/common/db/seeders/outgoingTransactionStatus.seed.js",
+    "seed:all": "npm run seed:state && npm run seed:city && npm run seed:docType && npm run seed:occType && npm run seed:statusType",
     "commit": "cz"
   },
   "dependencies": {

@@ -36,4 +36,10 @@ export class UtilsController {
   findAllOccupationTypes(@Req() request: Request) {
     return this.utilsService.findAllOccupationTypes(request);
   }
+
+  @Get('outgoing-transaction-status')
+  @ApiResponse(findAllOccupationTypesSwaggerOptions)
+  findAlloutgoingTransactionStatus(@Req() request: Request) {
+    return this.utilsService.findAlloutgoingTransactionStatus(request);
+  }
 }

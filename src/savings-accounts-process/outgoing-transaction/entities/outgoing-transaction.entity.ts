@@ -1,6 +1,10 @@
-import { SAVINGS_ACCOUNT_SCHEMA_NAME } from '@constants/mongo-db';
+import {
+  OUTGOING_TRANSACTION_STATUS_SCHEMA_NAME,
+  SAVINGS_ACCOUNT_SCHEMA_NAME,
+} from '@constants/mongo-db';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { SavingsAccountDocument } from '@savings-accounts/entities/savings-account.entity';
+import { OutgoingTransactionStatusDocument } from '@utils/schemas/process/outgoing-transaction-statatus.schema';
 import { Document, Types } from 'mongoose';
 
 export type OutgoingTransactionDocument = OutgoingTransaction & Document;
@@ -24,8 +28,12 @@ export class OutgoingTransaction {
   @Prop({ required: true })
   value: number;
 
-  @Prop({ required: true })
-  status: string;
+  @Prop({
+    type: Types.ObjectId,
+    ref: OUTGOING_TRANSACTION_STATUS_SCHEMA_NAME,
+    required: true,
+  })
+  status_id: string | OutgoingTransactionStatusDocument;
 
   @Prop({ required: true })
   description: string;

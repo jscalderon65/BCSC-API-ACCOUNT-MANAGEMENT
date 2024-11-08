@@ -1,6 +1,7 @@
 import { MESSAGES } from '@constants/messages';
 import {
   OUTGOING_TRANSACTION_SCHEMA_NAME,
+  OUTGOING_TRANSACTION_STATUS_SCHEMA_NAME,
   SAVINGS_ACCOUNT_SCHEMA_NAME,
 } from '@constants/mongo-db';
 import {
@@ -14,16 +15,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import {
-  CreateOutgoingTransactionDto,
-  TransactionStatus,
-} from '@outgoing-transaction/dto/create-outgoing-transaction.dto';
+import { CreateOutgoingTransactionDto } from '@outgoing-transaction/dto/create-outgoing-transaction.dto';
 import { UpdateOutgoingTransactionDto } from '@outgoing-transaction/dto/update-outgoing-transaction.dto';
 import {
   OutgoingTransaction,
   OutgoingTransactionDocument,
 } from '@outgoing-transaction/entities/outgoing-transaction.entity';
 import { SavingsAccountDocument } from '@savings-accounts/entities/savings-account.entity';
+import { OutgoingTransactionStatus } from '@utils/schemas/process/outgoing-transaction-statatus.schema';
 import { Model } from 'mongoose';
 
 @Injectable()
@@ -31,6 +30,7 @@ export class OutgoingTransactionService {
   private readonly globalPopulatePath = [
     { path: 'source_account_id' },
     { path: 'destination_account_id' },
+    { path: 'status_id' },
   ];
   financialDataModel: any;
   constructor(
@@ -39,6 +39,9 @@ export class OutgoingTransactionService {
 
     @InjectModel(SAVINGS_ACCOUNT_SCHEMA_NAME)
     private readonly savingAccountModel: Model<SavingsAccountDocument>,
+
+    @InjectModel(OUTGOING_TRANSACTION_STATUS_SCHEMA_NAME)
+    private readonly outgoingTransactionStatusModel: Model<OutgoingTransactionStatus>,
   ) {}
 
   async isValidEntityRelationshipsId(
@@ -46,6 +49,8 @@ export class OutgoingTransactionService {
   ): Promise<void> {
     const entityServiceValidations = {
       [SAVINGS_ACCOUNT_SCHEMA_NAME]: this.savingAccountModel,
+      [OUTGOING_TRANSACTION_STATUS_SCHEMA_NAME]:
+        this.outgoingTransactionStatusModel,
     };
     await validateEntityRelationships(entityIds, entityServiceValidations);
   }
@@ -78,6 +83,10 @@ export class OutgoingTransactionService {
         entityName: SAVINGS_ACCOUNT_SCHEMA_NAME,
         id: createOutgoingTransactionDto.destination_account_id,
       },
+      {
+        entityName: OUTGOING_TRANSACTION_STATUS_SCHEMA_NAME,
+        id: createOutgoingTransactionDto.status_id,
+      },
     ];
 
     await this.isValidEntityRelationshipsId(entityIds);
@@ -95,10 +104,9 @@ export class OutgoingTransactionService {
       );
     }
 
-    const newOutgoingTransaction = await this.outgoingTransactionModel.create({
-      ...createOutgoingTransactionDto,
-      status: TransactionStatus.Pending,
-    });
+    const newOutgoingTransaction = await this.outgoingTransactionModel.create(
+      createOutgoingTransactionDto,
+    );
 
     await this.savingAccountModel.findByIdAndUpdate(
       createOutgoingTransactionDto.source_account_id,

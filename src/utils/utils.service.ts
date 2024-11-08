@@ -2,12 +2,17 @@ import {
   CITY_SCHEMA_NAME,
   DOCUMENT_TYPE_SCHEMA_NAME,
   OCCUPATION_TYPE_SCHEMA_NAME,
+  OUTGOING_TRANSACTION_STATUS_SCHEMA_NAME,
   STATE_SCHEMA_NAME,
 } from '@constants/mongo-db';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { City, CityDocument } from '@utils/schemas/location/city.schema';
 import { State, StateDocument } from '@utils/schemas/location/state.schema';
+import {
+  OutgoingTransactionStatus,
+  OutgoingTransactionStatusDocument,
+} from '@utils/schemas/process/outgoing-transaction-statatus.schema';
 import {
   DocumentType,
   DocumentTypeDocument,
@@ -33,6 +38,9 @@ export class UtilsService {
 
     @InjectModel(OCCUPATION_TYPE_SCHEMA_NAME)
     private readonly occupacionType: Model<OccupationTypeDocument>,
+
+    @InjectModel(OUTGOING_TRANSACTION_STATUS_SCHEMA_NAME)
+    private readonly outgoingTransactionStatusModel: Model<OutgoingTransactionStatusDocument>,
   ) {}
 
   findAllCities(request: Request): Promise<City[]> {
@@ -49,5 +57,11 @@ export class UtilsService {
 
   findAllOccupationTypes(request: Request): Promise<OccupationType[]> {
     return this.occupacionType.find(request.query);
+  }
+
+  findAlloutgoingTransactionStatus(
+    request: Request,
+  ): Promise<OutgoingTransactionStatus[]> {
+    return this.outgoingTransactionStatusModel.find(request.query);
   }
 }
