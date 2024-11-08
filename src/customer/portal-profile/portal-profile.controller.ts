@@ -21,8 +21,9 @@ import { CreatePortalProfileDto } from './dto/create-portal-profile.dto';
 import { UpdatePortalProfileDto } from './dto/update-portal-profile.dto';
 import { PortalProfileService } from './portal-profile.service';
 
-@Controller('customer/portal-profile')
-@ApiTags('customer/portal-profile')
+const controllerPrefix = 'customer/portal-profile';
+@Controller(controllerPrefix)
+@ApiTags(controllerPrefix)
 export class PortalProfileController {
   constructor(private readonly portalProfileService: PortalProfileService) {}
 

@@ -1,8 +1,13 @@
+import { MESSAGES } from '@constants/messages';
 import {
   DOCUMENT_TYPE_SCHEMA_NAME,
   PORTAL_PROFILE_SCHEMA_NAME,
 } from '@constants/mongo-db';
-import { ageValidation } from '@helpers/validations.helper';
+import {
+  ageValidation,
+  protectedFieldUpdate,
+} from '@helpers/validations.helper';
+import { DeleteResponse } from '@interfaces/common.interfaces';
 import {
   BadRequestException,
   Injectable,
@@ -11,7 +16,10 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { CreatePortalProfileDto } from '@portal-profile/dto/create-portal-profile.dto';
 import { UpdatePortalProfileDto } from '@portal-profile/dto/update-portal-profile.dto';
-import { PortalProfileDocument } from '@portal-profile/entities/portal-profile.entity';
+import {
+  PortalProfile,
+  PortalProfileDocument,
+} from '@portal-profile/entities/portal-profile.entity';
 import { DocumentTypeDocument } from '@utils/schemas/user-identity/document-type.schema';
 import { Model, Types } from 'mongoose';
 
@@ -26,7 +34,9 @@ export class PortalProfileService {
     private readonly DocumentTypeModel: Model<DocumentTypeDocument>,
   ) {}
 
-  async create(createPortalProfileDto: CreatePortalProfileDto) {
+  async create(
+    createPortalProfileDto: CreatePortalProfileDto,
+  ): Promise<PortalProfile> {
     if (!ageValidation(createPortalProfileDto.birth_date)) {
       throw new BadRequestException(
         'El usuario debe ser mayor de edad y menor de 90 años',
@@ -39,7 +49,10 @@ export class PortalProfileService {
 
     if (!documentTypeExists) {
       throw new BadRequestException(
-        `El tipo de documento con ID ${createPortalProfileDto.document_type_id} no existe`,
+        MESSAGES.RESPONSE_MESSAGES.NO_ENTITY_FOUND_WITH_ID(
+          DOCUMENT_TYPE_SCHEMA_NAME,
+          createPortalProfileDto.document_type_id,
+        ),
       );
     }
 
@@ -69,79 +82,65 @@ export class PortalProfileService {
     return newPortalProfile;
   }
 
-  async findAll() {
+  async findAll(): Promise<PortalProfile[]> {
     return this.PortalProfileModel.find()
       .populate(this.globalPopulatePath)
       .exec();
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<PortalProfile> {
     const profile = await this.PortalProfileModel.findById(id)
       .populate(this.globalPopulatePath)
       .exec();
 
     if (!profile) {
-      throw new BadRequestException(`No se encontró el perfil con ID ${id}`);
+      throw new NotFoundException(MESSAGES.RESPONSE_MESSAGES.NO_RECORD_FOUND);
     }
 
     return profile;
   }
 
-  async update(id: string, updatePortalProfileDto: UpdatePortalProfileDto) {
+  async update(
+    id: string,
+    updatePortalProfileDto: UpdatePortalProfileDto,
+  ): Promise<PortalProfile> {
     if (!ageValidation(updatePortalProfileDto.birth_date)) {
       throw new BadRequestException(
         'El usuario debe ser mayor de edad y menor de 90 años',
       );
     }
     const currentProfile = await this.PortalProfileModel.findById(id);
-    if (!currentProfile) {
-      throw new NotFoundException(`No se encontró el perfil con ID ${id}`);
-    }
-
     const protectedFields = ['email', 'document_number', 'document_id'];
 
-    const attemptedProtectedUpdates = protectedFields.filter((field) => {
-      if (updatePortalProfileDto[field] === undefined) return false;
-      return updatePortalProfileDto[field] !== currentProfile[field];
-    });
+    const safeUpdateData = await protectedFieldUpdate(
+      id,
+      currentProfile,
+      updatePortalProfileDto,
+      protectedFields,
+    );
 
-    if (attemptedProtectedUpdates.length > 0) {
-      throw new BadRequestException(
-        `No se pueden modificar los siguientes campos: ${protectedFields.join()}`,
-      );
-    }
-
-    const safeUpdateData = Object.keys(updatePortalProfileDto)
-      .filter((key) => {
-        if (!protectedFields.includes(key)) return true;
-        return updatePortalProfileDto[key] === currentProfile[key];
-      })
-      .reduce((obj, key) => {
-        obj[key] = updatePortalProfileDto[key];
-        return obj;
-      }, {});
-
-    const portalProfileUpdated = await this.PortalProfileModel.findOneAndUpdate(
+    const updatedFinancialData = await this.PortalProfileModel.findOneAndUpdate(
       { _id: id },
       safeUpdateData,
-      {
-        new: true,
-      },
+      { new: true },
     ).populate(this.globalPopulatePath);
 
-    return portalProfileUpdated;
+    return updatedFinancialData;
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<DeleteResponse<PortalProfile>> {
     const deletedProfile = await this.PortalProfileModel.findByIdAndDelete(id);
 
     if (!deletedProfile) {
-      throw new NotFoundException(`No se encontró el perfil con ID ${id}`);
+      throw new NotFoundException(MESSAGES.RESPONSE_MESSAGES.NO_RECORD_FOUND);
     }
 
     return {
-      message: `Perfil con ID ${id} eliminado exitosamente`,
-      profile: deletedProfile,
+      message: MESSAGES.RESPONSE_MESSAGES.DELETE_RESPONSE(
+        PORTAL_PROFILE_SCHEMA_NAME,
+        id,
+      ),
+      deletedItem: deletedProfile,
     };
   }
 }

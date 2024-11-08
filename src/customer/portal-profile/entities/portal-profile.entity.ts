@@ -26,7 +26,7 @@ export class PortalProfile {
     ref: DOCUMENT_TYPE_SCHEMA_NAME,
     required: true,
   })
-  document_type_id: Types.ObjectId | DocumentTypeDocument;
+  document_type_id: string | DocumentTypeDocument;
 
   @Prop({ required: true, unique: true })
   document_number: string;
