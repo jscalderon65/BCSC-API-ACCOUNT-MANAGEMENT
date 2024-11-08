@@ -39,6 +39,9 @@
       "@financial-data/*": [
         "src/customer/financial-data/*"
       ],
+      "@savings-accounts/*": [
+        "src/savings-accounts/*"
+      ],
       "@kyc-data/*": [
         "src/customer/kyc-data/*"
       ],

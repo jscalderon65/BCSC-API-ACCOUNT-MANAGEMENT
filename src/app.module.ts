@@ -11,6 +11,7 @@ import { AppService } from './app.service';
 import { FinancialDataModule } from './customer/financial-data/financial-data.module';
 import { KycDataModule } from './customer/kyc-data/kyc-data.module';
 import { PortalProfileModule } from './customer/portal-profile/portal-profile.module';
+import { SavingsAccountsModule } from './savings-accounts/savings-accounts.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { PortalProfileModule } from './customer/portal-profile/portal-profile.mo
     PortalProfileModule,
     KycDataModule,
     FinancialDataModule,
+    SavingsAccountsModule,
   ],
   controllers: [AppController],
   providers: [
