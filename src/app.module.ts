@@ -11,6 +11,7 @@ import { AppService } from './app.service';
 import { FinancialDataModule } from './customer/financial-data/financial-data.module';
 import { KycDataModule } from './customer/kyc-data/kyc-data.module';
 import { PortalProfileModule } from './customer/portal-profile/portal-profile.module';
+import { EarLiquidationModule } from './ear-liquidation/ear-liquidation.module';
 import { SavingsAccountsModule } from './savings-accounts/savings-accounts.module';
 import { TransactionModule } from './transactions/transaction.module';
 
@@ -26,6 +27,7 @@ import { TransactionModule } from './transactions/transaction.module';
     FinancialDataModule,
     SavingsAccountsModule,
     TransactionModule,
+    EarLiquidationModule,
   ],
   controllers: [AppController],
   providers: [

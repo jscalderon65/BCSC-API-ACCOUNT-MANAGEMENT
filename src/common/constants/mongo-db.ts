@@ -18,3 +18,4 @@ export const FINANCIAL_DATA_SCHEMA_NAME = 'financial-data';
 export const SAVINGS_ACCOUNT_SCHEMA_NAME = 'savings-account';
 export const TRANSACTION_SCHEMA_NAME = 'transaction';
 export const TRANSACTION_STATUS_SCHEMA_NAME = 'transaction-status';
+export const EAR_LIQUIDATION_SCHEMA_NAME = 'ear-liquidation';
