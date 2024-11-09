@@ -1,6 +1,6 @@
-import { PeriodType } from '@helpers/dates.helper';
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ParseDatePipe } from '@pipes/parse-date.pipe';
 import { ParseObjectIdPipe } from '@pipes/parse-object-id.pipe';
 import {
   createSwaggerOptions,
@@ -29,27 +29,55 @@ export class TransactionController {
     return this.transactionService.findAll();
   }
 
-  @Get('/outgoing/:account_id/:period')
+  @Get('/outgoing/:account_id')
   @ApiResponse(findAllSwaggerOptions)
+  @ApiQuery({
+    name: 'startDate',
+    required: true,
+    type: String,
+    description: 'Start date (YYYY-MM-DD)',
+  })
+  @ApiQuery({
+    name: 'endDate',
+    required: true,
+    type: String,
+    description: 'End date (YYYY-MM-DD)',
+  })
   findOutgoingTransactionsByAccountId(
     @Param('account_id', ParseObjectIdPipe) id: string,
-    @Param('period') period: PeriodType,
+    @Query('startDate', ParseDatePipe) startDate: Date,
+    @Query('endDate', ParseDatePipe) endDate: Date,
   ) {
     return this.transactionService.findOutgoingTransactionsByAccountId(
       id,
-      period,
+      startDate,
+      endDate,
     );
   }
 
-  @Get('/incoming/:account_id/:period')
+  @Get('/incoming/:account_id')
   @ApiResponse(findAllSwaggerOptions)
+  @ApiQuery({
+    name: 'startDate',
+    required: true,
+    type: String,
+    description: 'Start date (YYYY-MM-DD)',
+  })
+  @ApiQuery({
+    name: 'endDate',
+    required: true,
+    type: String,
+    description: 'End date (YYYY-MM-DD)',
+  })
   findIncomingTransactionsByAccountId(
     @Param('account_id', ParseObjectIdPipe) id: string,
-    @Param('period') period: PeriodType,
+    @Query('startDate', ParseDatePipe) startDate: Date,
+    @Query('endDate', ParseDatePipe) endDate: Date,
   ) {
     return this.transactionService.findIncomingTransactionsByAccountId(
       id,
-      period,
+      startDate,
+      endDate,
     );
   }
 

@@ -4,7 +4,6 @@ import {
   TRANSACTION_SCHEMA_NAME,
   TRANSACTION_STATUS_SCHEMA_NAME,
 } from '@constants/mongo-db';
-import { getDateRange, PeriodType } from '@helpers/dates.helper';
 import { getRandomStatus } from '@helpers/simulations.helper';
 import { validateEntityRelationships } from '@helpers/validations.helper';
 import { EntityRelationship } from '@interfaces/entity-relationship-validation.interface';
@@ -142,23 +141,32 @@ export class TransactionService {
 
   findOutgoingTransactionsByAccountId(
     id: string,
-    period: PeriodType,
+    startDate: Date,
+    endDate: Date,
   ): Promise<Transaction[]> {
-    const { start, end } = getDateRange(new Date(), period);
     return this.transactionModel
-      .find({ source_account_id: id, createdAt: { $gte: start, $lte: end } })
+      .find({
+        source_account_id: id,
+        createdAt: {
+          $gte: startDate,
+          $lte: endDate,
+        },
+      })
       .populate(this.globalPopulatePath);
   }
 
   findIncomingTransactionsByAccountId(
     id: string,
-    period: PeriodType,
+    startDate: Date,
+    endDate: Date,
   ): Promise<Transaction[]> {
-    const { start, end } = getDateRange(new Date(), period);
     return this.transactionModel
       .find({
         destination_account_id: id,
-        createdAt: { $gte: start, $lte: end },
+        createdAt: {
+          $gte: startDate,
+          $lte: endDate,
+        },
       })
       .populate(this.globalPopulatePath);
   }
