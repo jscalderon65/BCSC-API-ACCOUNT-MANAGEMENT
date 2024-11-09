@@ -2,13 +2,7 @@ import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 
-export enum TransactionStatus {
-  Pending = 'pending',
-  Completed = 'accepted',
-  Failed = 'failed',
-}
-
-export class CreateOutgoingTransactionDto {
+export class CreateTransactionDto {
   @ApiProperty({
     description: 'ID de la cuenta de ahorros',
     /* example: faker.database.mongodbObjectId(), */
@@ -31,14 +25,6 @@ export class CreateOutgoingTransactionDto {
   })
   @IsNumber()
   value: number;
-
-  @ApiProperty({
-    description: 'Estatus de la operación',
-    /* example: faker.database.mongodbObjectId(), */
-    example: '672e9377cc0d95c6258bee97',
-  })
-  @IsString()
-  status_id: string;
 
   @ApiProperty({
     description: 'Descripción de la operación',

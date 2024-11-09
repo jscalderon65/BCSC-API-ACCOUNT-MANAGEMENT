@@ -1,31 +1,23 @@
+import { MONGO_URI, TRANSACTION_STATUS_SCHEMA_NAME } from '@constants/mongo-db';
 import {
-  MONGO_URI,
-  OUTGOING_TRANSACTION_STATUS_SCHEMA_NAME,
-} from '@constants/mongo-db';
-import {
-  OutgoingTransactionStatusDocument,
-  OutgoingTransactionStatusSchema,
-} from '@utils/schemas/process/outgoing-transaction-statatus.schema';
+  TransactionStatusDocument,
+  TransactionStatusSchema,
+} from '@utils/schemas/process/transaction-status.schema';
 import mongoose from 'mongoose';
 
 async function insertData() {
   try {
     const db = await mongoose.connect(MONGO_URI);
 
-    const transactionStatusModel = db.model<OutgoingTransactionStatusDocument>(
-      OUTGOING_TRANSACTION_STATUS_SCHEMA_NAME,
-      OutgoingTransactionStatusSchema,
+    const transactionStatusModel = db.model<TransactionStatusDocument>(
+      TRANSACTION_STATUS_SCHEMA_NAME,
+      TransactionStatusSchema,
     );
 
     await transactionStatusModel.deleteMany();
     console.log('Deleting existing data...');
 
-    const outgoingTransactionStatusToInsert = [
-      {
-        code: 'PENDING',
-        name: 'Pendiente',
-        description: 'La transacción está pendiente y esperando ser procesada.',
-      },
+    const transactionStatusToInsert = [
       {
         code: 'COMPLETED',
         name: 'Completada',
@@ -43,11 +35,11 @@ async function insertData() {
       },
     ];
 
-    await transactionStatusModel.insertMany(outgoingTransactionStatusToInsert);
+    await transactionStatusModel.insertMany(transactionStatusToInsert);
 
-    console.log('OutgoingTransactionStatus data inserted successfully');
+    console.log('TransactionStatus data inserted successfully');
   } catch (error) {
-    console.error('Error inserting outgoingTransactionStatus data:', error);
+    console.error('Error inserting TransactionStatus data:', error);
   } finally {
     await mongoose.disconnect();
     console.log('Database connection closed.');

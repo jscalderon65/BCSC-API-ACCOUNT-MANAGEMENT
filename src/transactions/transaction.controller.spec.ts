@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { OutgoingTransactionController } from './outgoing-transaction.controller';
-import { OutgoingTransactionService } from './outgoing-transaction.service';
+import { OutgoingTransactionController } from './transaction.controller';
+import { OutgoingTransactionService } from './transaction.service';
 
 describe('OutgoingTransactionController', () => {
   let controller: OutgoingTransactionController;

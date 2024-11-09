@@ -1,11 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-export type OutgoingTransactionStatusDocument = OutgoingTransactionStatus &
-  Document;
+export type TransactionStatusDocument = TransactionStatus & Document;
 
 @Schema({ timestamps: true })
-export class OutgoingTransactionStatus {
+export class TransactionStatus {
   @Prop({ required: true, unique: true })
   code: string;
 
@@ -16,6 +15,5 @@ export class OutgoingTransactionStatus {
   description: string;
 }
 
-export const OutgoingTransactionStatusSchema = SchemaFactory.createForClass(
-  OutgoingTransactionStatus,
-);
+export const TransactionStatusSchema =
+  SchemaFactory.createForClass(TransactionStatus);

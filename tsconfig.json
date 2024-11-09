@@ -42,8 +42,8 @@
       "@savings-accounts/*": [
         "src/savings-accounts/*"
       ],
-      "@outgoing-transaction/*": [
-        "src/savings-accounts-process/outgoing-transaction/*"
+      "@transactions/*": [
+        "src/transactions/*"
       ],
       "@kyc-data/*": [
         "src/customer/kyc-data/*"

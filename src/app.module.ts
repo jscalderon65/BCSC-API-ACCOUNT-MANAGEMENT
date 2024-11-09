@@ -12,7 +12,7 @@ import { FinancialDataModule } from './customer/financial-data/financial-data.mo
 import { KycDataModule } from './customer/kyc-data/kyc-data.module';
 import { PortalProfileModule } from './customer/portal-profile/portal-profile.module';
 import { SavingsAccountsModule } from './savings-accounts/savings-accounts.module';
-import { OutgoingTransactionModule } from './savings-accounts-process/outgoing-transaction/outgoing-transaction.module';
+import { TransactionModule } from './transactions/transaction.module';
 
 @Module({
   imports: [
@@ -25,7 +25,7 @@ import { OutgoingTransactionModule } from './savings-accounts-process/outgoing-t
     KycDataModule,
     FinancialDataModule,
     SavingsAccountsModule,
-    OutgoingTransactionModule,
+    TransactionModule,
   ],
   controllers: [AppController],
   providers: [

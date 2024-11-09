@@ -16,6 +16,5 @@ export const FINANCIAL_PROFILE_SCHEMA_NAME = 'financial-profile';
 export const KYC_DATA_SCHEMA_NAME = 'kyc-data';
 export const FINANCIAL_DATA_SCHEMA_NAME = 'financial-data';
 export const SAVINGS_ACCOUNT_SCHEMA_NAME = 'savings-account';
-export const OUTGOING_TRANSACTION_SCHEMA_NAME = 'outgoing-transaction';
-export const OUTGOING_TRANSACTION_STATUS_SCHEMA_NAME =
-  'outgoing-transaction-status';
+export const TRANSACTION_SCHEMA_NAME = 'transaction';
+export const TRANSACTION_STATUS_SCHEMA_NAME = 'transaction-status';

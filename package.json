@@ -95,7 +95,7 @@
       "^@portal-profile/(.*)$": "<rootDir>/customer/portal-profile/$1",
       "^@financial-data/(.*)$": "<rootDir>/customer/financial-data/$1",
       "^@savings-accounts/(.*)$": "<rootDir>/savings-accounts/$1",
-      "^@outgoing-transaction/(.*)$": "<rootDir>/savings-accounts-process/outgoing-transaction/$1",
+      "^@transactions/(.*)$": "<rootDir>/transaction/$1",
       "^@kyc-data/(.*)$": "<rootDir>/customer/kyc-data/$1",
       "^@axios/(.*)$": "<rootDir>/axios/$1",
       "^@helpers/(.*)$": "<rootDir>/common/helpers/$1",

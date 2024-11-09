@@ -1,14 +1,10 @@
-import { TransactionStatus } from '@outgoing-transaction/dto/create-outgoing-transaction.dto';
-
-const outgoingTransaction = {
+const Transaction = {
   _id: { type: 'string' },
   saving_account_id: { type: 'string' },
   destination_account_id: { type: 'string' },
   value: { type: 'number' },
   status: {
     type: 'string',
-    enum: Object.values(TransactionStatus),
-    default: TransactionStatus.Pending,
   },
   description: { type: 'string' },
   createdAt: { type: 'string', format: 'date-time' },
@@ -21,7 +17,7 @@ export const createSwaggerOptions = {
     'Endpoint para crear una transacción saliente, moviendo fondos desde una cuenta de ahorros a una cuenta de destino.',
   schema: {
     type: 'object',
-    properties: outgoingTransaction,
+    properties: Transaction,
   },
 };
 
@@ -31,7 +27,7 @@ export const findAllSwaggerOptions = {
     'Endpoint para obtener todas las transacciones salientes realizadas en la plataforma, incluyendo la información de las cuentas de origen y destino.',
   schema: {
     type: 'array',
-    items: { type: 'object', properties: outgoingTransaction },
+    items: { type: 'object', properties: Transaction },
   },
 };
 
@@ -41,7 +37,7 @@ export const findOneSwaggerOptions = {
     'Endpoint para obtener la información de una transacción saliente específica, identificado por su ID único.',
   schema: {
     type: 'object',
-    properties: outgoingTransaction,
+    properties: Transaction,
   },
 };
 
@@ -53,8 +49,7 @@ export const updateSwaggerOptions = {
     type: 'object',
     properties: {
       status: {
-        type: 'enum',
-        example: JSON.stringify(Object.values(TransactionStatus)),
+        type: 'string',
       },
     },
   },
@@ -68,7 +63,7 @@ export const removeSwaggerOptions = {
     type: 'object',
     properties: {
       message: { type: 'string' },
-      outgoingTransaction: { type: 'object', properties: outgoingTransaction },
+      Transaction: { type: 'object', properties: Transaction },
     },
   },
 };
